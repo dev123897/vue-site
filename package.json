@@ -8,7 +8,7 @@
     "lint": "eslint . --fix",
     "build": "vite build",
     "preview": "vite preview",
-    "tailwind": "tailwindcss -i ./src/assets/main.css -o ./src/assets/outputtailwind.cssh",
+    "tailwind": "tailwindcss -i ./src/assets/main.css -o ./src/assets/outputtailwind.css",
     "test": "mocha"
   },
   "dependencies": {
