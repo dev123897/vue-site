@@ -2,7 +2,7 @@ import axios from 'axios'
 
 const instance = axios.create({
   baseURL: import.meta.env.VITE_API_SERVER,
-  timeout: 1000,
+  timeout: 3000, // 3000 ms so initial aws file download request doesn't timeout.
 })
 
 instance.interceptors.request.use(function (config) {

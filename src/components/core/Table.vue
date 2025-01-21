@@ -82,7 +82,7 @@ function shouldDisplayPageNumber(i) {
 }
 
 function download(src, id) {
-  src += `/${id ? id : JSON.stringify(selected.value)}`
+  src += `/${id ? id : JSON.stringify(selected.value.map(i => data.value[i].id))}`
 
   axios
     .get(src, { responseType: 'blob' } )
@@ -103,7 +103,10 @@ function download(src, id) {
           window.URL.revokeObjectURL(url)
       }, 0)
     })
-    .catch(e => displayError('failed to download file'))
+    .catch(e => {
+      console.error(e)
+      displayError('failed to download file')
+    })
 }
 
 let alerts = ref([])
