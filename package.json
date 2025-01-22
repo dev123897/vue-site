@@ -9,6 +9,7 @@
     "build": "vite build",
     "preview": "vite preview",
     "tailwind": "tailwindcss -i ./src/assets/main.css -o ./src/assets/outputtailwind.css",
+    "tailwind-prod": "tailwindcss -i ./src/assets/main.css -o ./src/assets/outputtailwind.css --minify",
     "test": "mocha"
   },
   "dependencies": {
