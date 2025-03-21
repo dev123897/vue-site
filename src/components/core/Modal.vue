@@ -108,7 +108,7 @@ if (dropdownTables.length) {
           <h3 class="text-xl font-semibold text-gray-900">
             Enter data
           </h3>
-          <Button @click="$emit('modal-close')">
+          <Button id="cancel" @click="$emit('modal-close')">
             X
           </Button>
         </div>
@@ -142,6 +142,7 @@ if (dropdownTables.length) {
                   />
                   <Input
                     v-else-if="t.type === 'boolean'"
+                    id="checkbox"
                     :disabled="t.readonly"
                     v-model:value="modalData[t.name]"
                     true-value="1"
@@ -172,13 +173,14 @@ if (dropdownTables.length) {
         <hr class="bg-sleet-30 max-w-[90%] m-auto">
         <div class="flex items-center p-4 md:p-5">
           <Button
-            :class="{'cursor-not-allowed': v$.$error}"
-            :disabled="v$.$error"
+            id="ok"
+            :class="{'cursor-not-allowed': v$.$error || v$.$invalid}"
+            :disabled="v$.$error || v$.$invalid"
             @click="update"
           >
             Ok
           </Button>
-          <Button @click="$emit('modal-close')">
+          <Button id="close" @click="$emit('modal-close')">
             Close
           </Button>
         </div>

@@ -72,6 +72,7 @@ let routes = ref([
       >
         <span>{{route.icon}}</span>
         <RouterLink
+          :id="route.name"
           :to="route.path"
           class="font-fira-sans text-mdd font-medium"
          :class="linkClass"

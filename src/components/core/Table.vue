@@ -26,7 +26,8 @@ watch(alertMsg, (newAlert, oldAlert) => {
     displayError(newAlert)
 })
 
-const icons = '◆⮝⮟'
+// const icons = '◆⮝⮟' TODO - the last 2 chars dont work in firefox
+const icons = '◆↑↓'
 const actions = Object.freeze({
   POST: 0,
   PUT: 1,
@@ -196,7 +197,7 @@ function setOrder(selectedIndex) {
       @delete-alert="closeAlert"
     />
     <h1 class="pb-5 text-xl font-bold">{{table.title}}</h1>
-    <table class="relative rounded-md content-center w-full text-sm text-left text-sleet-30">
+    <table id="table" class="relative rounded-md content-center w-full text-sm text-left text-sleet-30">
       <!-- loading backdrop -->
       <div
         v-if="loading"
@@ -221,18 +222,20 @@ function setOrder(selectedIndex) {
             class="px-6 py-3"
           >
             <input
+              id="checkbox-all"
               v-if="table.enableRowSelect && i === 0"
               v-model="allSelected"
               type="checkbox"
               @click="selectAll"
             />
             {{h.altName || h.name}}
-            <button @click="setOrder(i)">
+            <button :id="'order-' + h.name" @click="setOrder(i)">
               {{h.orderIcon}}
             </button>
           </th>
           <th class="float-right pt-1 pr-2">
             <Button
+              id="download"
               v-if="hasDownload"
               :disabled="selected.length === 0"
               @click="download(hasDownload.src)"
@@ -242,11 +245,12 @@ function setOrder(selectedIndex) {
               Download
             </Button>
             <Input
+              id="search"
               v-if="!table.disableSearch"
               displayname="search"
               @keyup.enter="searchTable"
             />
-            <Button v-if="!table.disallowPost" @click="openAddModal">
+            <Button id="addModal" v-if="!table.disallowPost" @click="openAddModal">
               +
             </Button>
           </th>
@@ -256,6 +260,7 @@ function setOrder(selectedIndex) {
         <tr
           v-for="(row, i) in data ?? tableData"
           :key="i"
+          :id="'row-' + i"
           class="hover:bg-midnight-10"
           :class="[i % 2 !== 0 ? 'bg-[#646e83]' : 'bg-[#949baa]']"
         >
@@ -268,17 +273,18 @@ function setOrder(selectedIndex) {
               {{row[t.name] ? '✔️' : '❌' }}
             </p>
             <button
+              :id="'download-' + i"
               v-else-if="t.type === 'download'"
               @click="download(t.src, row[t.param])"
               download
             >
               {{row[t.name]}}
             </button>
-            <p v-else>
+            <p v-else :id="'row-' + i + '-col-' + j">
               <input
                 v-if="table.enableRowSelect && t.primaryKey"
                 v-model="selected"
-                :id="i"
+                :id="'checkbox-' + i"
                 :value="i"
                 type="checkbox"
               />
@@ -288,12 +294,14 @@ function setOrder(selectedIndex) {
           </td>
           <td class="float-right pr-2">
             <Button
+              :id="'edit-' + i"
               v-if="!table.disableEditing"
               @click="openEditModal(row)"
             >
               ✎
             </Button>
             <Button
+              :id="'delete-' + i"
               v-if="!table.disableEditing && !table.disallowDelete"
               @click="openDeleteModal(row)"
             >
@@ -304,6 +312,7 @@ function setOrder(selectedIndex) {
       </tbody>
       <tfoot>
         <Button
+          id="page-first"
           v-if="(data ?? tableData).length"
           :class="{'cursor-not-allowed': !current}"
           :disabled="!current"
@@ -313,6 +322,7 @@ function setOrder(selectedIndex) {
         </Button>
         <template v-for="(page, i) in pages" :key="page">
           <Button
+            :id="'page-' + page"
             v-if="shouldDisplayPageNumber(i)"
             @click="fetchTableData(i)"
             :class="{'bg-sleet-40': i === current}"
@@ -321,6 +331,7 @@ function setOrder(selectedIndex) {
           </Button>
         </template>
         <Button
+          id="page-last"
           v-if="(data ?? tableData).length"
           :class="{'cursor-not-allowed': current === (pages - 1)}"
           :disabled="current === (pages - 1)"
